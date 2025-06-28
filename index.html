@@ -1,334 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Art Character</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .pixel-grid {
-            display: grid;
-            grid-template-columns: repeat(16, 20px);
-            grid-template-rows: repeat(16, 20px);
-            gap: 1px;
-            background-color: #000;
-            border: 2px solid #000;
-        }
-        
-        .pixel {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #ccc;
-        }
-        
-        .red { background-color: #ff0000; }
-        .brown { background-color: #8b4513; }
-        .peach { background-color: #ffdbac; }
-        .black { background-color: #000000; }
-        .blue { background-color: #0066ff; }
-        .yellow { background-color: #ffff00; }
-        .white { background-color: #ffffff; }
-        .light-brown { background-color: #deb887; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Among Us</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 3rem;
+      margin: 20px 0 10px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 15px red;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crewmate-wrapper {
+      position: absolute;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .crewmate {
+      position: relative;
+      width: 120px;
+      height: 180px;
+    }
+
+    .body {
+      width: 120px;
+      height: 180px;
+      background: var(--body-color);
+      border-radius: 60px 60px 35px 35px;
+      box-shadow: inset -6px 0 rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .backpack {
+      position: absolute;
+      top: 50px;
+      left: -35px;
+      width: 40px;
+      height: 90px;
+      background: var(--backpack-color);
+      border-radius: 20px;
+      box-shadow: inset 5px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .visor {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      width: 80px;
+      height: 50px;
+      background: var(--visor-color);
+      border-radius: 25px;
+      border: 4px solid var(--visor-border);
+      box-shadow: inset -6px -6px rgba(255,255,255,0.3);
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    .visor::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      width: 15px;
+      height: 10px;
+      background: white;
+      opacity: 0.4;
+      border-radius: 50%;
+    }
+
+    .leg-left, .leg-right {
+      position: absolute;
+      bottom: -20px;
+      width: 30px;
+      height: 40px;
+      background: var(--body-color);
+      border-radius: 0 0 10px 10px;
+      z-index: 1;
+    }
+
+    .leg-left { left: 15px; }
+    .leg-right { right: 15px; }
+
+    .shadow {
+      position: absolute;
+      bottom: -25px;
+      left: 20px;
+      width: 80px;
+      height: 15px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 50%;
+      filter: blur(2px);
+      z-index: 0;
+    }
+
+    /* Colors */
+    .red { --body-color: #d42f2f; --backpack-color: #b02929; --visor-color: #add8e6; --visor-border: #5c9ead; z-index: 5; }
+    .blue { --body-color: #1e90ff; --backpack-color: #0050a0; --visor-color: #a0eaff; --visor-border: #0066cc; z-index: 2; }
+    .green { --body-color: #28a745; --backpack-color: #1c6e33; --visor-color: #a5fcd4; --visor-border: #2c9f66; z-index: 2; }
+    .yellow { --body-color: #ffd700; --backpack-color: #bfa500; --visor-color: #fffcc2; --visor-border: #999900; z-index: 1; }
+    .purple { --body-color: #a020f0; --backpack-color: #5b0a91; --visor-color: #dcb8ff; --visor-border: #6e28aa; z-index: 1; }
+
+    /* Positioning */
+    .cm1 { left: 15%; top: 58%; transform: scale(0.8); }
+    .cm2 { left: 35%; top: 55%; transform: scale(0.9); }
+    .cm3 { left: 50%; top: 50%; transform: translateX(-50%) scale(1); }
+    .cm4 { left: 65%; top: 55%; transform: scale(0.9); }
+    .cm5 { left: 83%; top: 58%; transform: scale(0.8); }
+  </style>
 </head>
 <body>
-    <div class="pixel-grid">
-        <!-- Row 1 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 2 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 3 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel black"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 4 -->
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel black"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 5 -->
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel black"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 6 -->
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel black"></div>
-        <div class="pixel black"></div>
-        <div class="pixel black"></div>
-        <div class="pixel black"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 7 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 8 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 9 -->
-        <div class="pixel white"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 10 -->
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel red"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 11 -->
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel red"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel yellow"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel yellow"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel red"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 12 -->
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 13 -->
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel peach"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 14 -->
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel blue"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 15 -->
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        
-        <!-- Row 16 -->
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel brown"></div>
-        <div class="pixel white"></div>
-        <div class="pixel white"></div>
+  <h1>Among Us</h1>
+  <div class="scene">
+
+    <!-- Left 2 Crewmates -->
+    <div class="crewmate-wrapper cm1 purple">
+      <div class="crewmate">
+        <div class="backpack"></div>
+        <div class="body">
+          <div class="visor"></div>
+        </div>
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+        <div class="shadow"></div>
+      </div>
     </div>
+
+    <div class="crewmate-wrapper cm2 green">
+      <div class="crewmate">
+        <div class="backpack"></div>
+        <div class="body">
+          <div class="visor"></div>
+        </div>
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+        <div class="shadow"></div>
+      </div>
+    </div>
+
+    <!-- Center Red Crewmate -->
+    <div class="crewmate-wrapper cm3 red">
+      <div class="crewmate">
+        <div class="backpack"></div>
+        <div class="body">
+          <div class="visor"></div>
+        </div>
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+        <div class="shadow"></div>
+      </div>
+    </div>
+
+    <!-- Right 2 Crewmates -->
+    <div class="crewmate-wrapper cm4 blue">
+      <div class="crewmate">
+        <div class="backpack"></div>
+        <div class="body">
+          <div class="visor"></div>
+        </div>
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+        <div class="shadow"></div>
+      </div>
+    </div>
+
+    <div class="crewmate-wrapper cm5 yellow">
+      <div class="crewmate">
+        <div class="backpack"></div>
+        <div class="body">
+          <div class="visor"></div>
+        </div>
+        <div class="leg-left"></div>
+        <div class="leg-right"></div>
+        <div class="shadow"></div>
+      </div>
+    </div>
+
+  </div>
 </body>
 </html>
+
